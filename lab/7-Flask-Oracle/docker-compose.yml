@@ -1,0 +1,27 @@
+version: '3'
+services:
+    oracle:
+        image: oddhome/oracle-database:12.2.0.1-se2
+        container_name: OracleSE 
+        restart: always
+        ports:
+            - 1521:1521
+            - 5500:5500
+        environment:
+            - ORACLE_SID=TEST01
+            - ORACLE_PDB=TESTPDB01
+            - ORACLE_PWD=password
+            - ORACLE_CHARACTERSET=AL32UTF8
+  
+    app1:
+        # image: oddhome/python-flask-oracle
+        build: builds/flask
+        restart: always
+        ports:
+            - 5000:5000
+        environment:
+            - PYTHON_USERNAME=SYSTEM
+            - PYTHON_PASSWORD=password
+            - PYTHON_CONNECTSTRING=db/TEST01
+        links:
+            - oracle:db
